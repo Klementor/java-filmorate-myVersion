@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.exceptions.FilmUpdateException;
+import ru.yandex.practicum.filmorate.exceptions.FilmValidateException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.validator.FilmValidator;
 
@@ -18,32 +20,32 @@ public class FilmController {
     private long id = 1;
 
     @PostMapping
-    public Film create(@RequestBody Film film) {
+    public Film create(@RequestBody Film film) throws FilmValidateException {
         FilmValidator.validate(film);
         film.setId(id++);
         films.put(film.getId(), film);
-        log.trace("Добавлен фильм");
+        log.debug("Добавлен фильм");
         log.debug("Количество фильмов: {}", films.size());
         return film;
     }
 
     @PutMapping
-    public Film update(@RequestBody Film film) {
+    public Film update(@RequestBody Film film) throws FilmUpdateException, FilmValidateException {
         FilmValidator.validate(film);
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
-            log.trace("Фильм обновлен");
+            log.debug("Фильм обновлен");
             log.debug("Количество фильмов: {}", films.size());
             return film;
         } else {
             log.warn("Попытка обновить несуществующий фильм");
-            throw new RuntimeException();
+            throw new FilmUpdateException("Попытка обновить несуществующий фильм");
         }
     }
 
     @GetMapping
-    public List<Film> get() {
-        log.trace("Вывод списка из всех фильмов");
+    public List<Film> getAll() {
+        log.debug("Вывод списка из всех фильмов");
         return new ArrayList<>(films.values());
     }
 }

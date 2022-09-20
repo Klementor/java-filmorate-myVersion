@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.validator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exceptions.UserUpdateException;
+import ru.yandex.practicum.filmorate.exceptions.UserValidateException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
@@ -9,7 +11,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserValidatorTest {
-    User user;
+    private User user;
 
     @BeforeEach
     void createUser() {
@@ -29,36 +31,36 @@ class UserValidatorTest {
     @Test
     void validateNullLogin() {
         user.setLogin(null);
-        assertThrows(RuntimeException.class, () -> UserValidator.validate(user));
+        assertThrows(UserValidateException.class, () -> UserValidator.validate(user));
     }
 
     @Test
     void validateSpaceLogin() {
         user.setLogin("  ");
-        assertThrows(RuntimeException.class, () -> UserValidator.validate(user));
+        assertThrows(UserValidateException.class, () -> UserValidator.validate(user));
     }
 
     @Test
     void validateNullEmail() {
         user.setEmail(null);
-        assertThrows(RuntimeException.class, () -> UserValidator.validate(user));
+        assertThrows(UserValidateException.class, () -> UserValidator.validate(user));
     }
 
     @Test
     void validateEmailWithoutTheSignAt() {
         user.setEmail("lala");
-        assertThrows(RuntimeException.class, () -> UserValidator.validate(user));
+        assertThrows(UserValidateException.class, () -> UserValidator.validate(user));
     }
 
     @Test
-    void validateNUllName() {
+    void validateNUllName() throws UserValidateException {
         user.setName(null);
         UserValidator.validate(user);
         assertEquals(user.getName(), user.getLogin());
     }
 
     @Test
-    void validateSpaceName() {
+    void validateSpaceName() throws UserValidateException {
         user.setName("  ");
         UserValidator.validate(user);
         assertEquals(user.getName(), user.getLogin());
@@ -67,6 +69,6 @@ class UserValidatorTest {
     @Test
     void validateImpossibleBirthday () {
         user.setBirthday(LocalDate.of(2023, 12,21));
-        assertThrows(RuntimeException.class, () -> UserValidator.validate(user));
+        assertThrows(UserValidateException.class, () -> UserValidator.validate(user));
     }
 }

@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.validator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exceptions.FilmValidateException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
@@ -10,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class FilmValidatorTest {
-    Film film;
+    private Film film;
 
     @BeforeEach
     void createFilm() {
@@ -30,25 +31,25 @@ class FilmValidatorTest {
     @Test
     void validateNullName() {
         film.setName(null);
-        assertThrows(RuntimeException.class, () -> FilmValidator.validate(film));
+        assertThrows(FilmValidateException.class, () -> FilmValidator.validate(film));
     }
 
     @Test
     void validateSpaceName() {
         film.setName("  ");
-        assertThrows(RuntimeException.class, () -> FilmValidator.validate(film));
+        assertThrows(FilmValidateException.class, () -> FilmValidator.validate(film));
     }
 
     @Test
     void validateDescriptionNull() {
         film.setDescription(null);
-        assertThrows(RuntimeException.class, () -> FilmValidator.validate(film));
+        assertThrows(FilmValidateException.class, () -> FilmValidator.validate(film));
     }
 
     @Test
     void validateSpaceDescription() {
         film.setDescription("  ");
-        assertThrows(RuntimeException.class, () -> FilmValidator.validate(film));
+        assertThrows(FilmValidateException.class, () -> FilmValidator.validate(film));
     }
 
     @Test
@@ -58,18 +59,18 @@ class FilmValidatorTest {
                 "discretion aware stuff that husband pursuit truth suffer. Desirous sending law delivered spirit " +
                 "admitting himself warrant peculiar shed made doubt felicity many unpacked. Improved over earnestly " +
                 "twenty sentiments lively. His widen mistress marriage. ");
-        assertThrows(RuntimeException.class, () -> FilmValidator.validate(film));
+        assertThrows(FilmValidateException.class, () -> FilmValidator.validate(film));
     }
 
     @Test
     void validateReleaseDate() {
         film.setReleaseDate(LocalDate.of(1700, 3, 4));
-        assertThrows(RuntimeException.class, () -> FilmValidator.validate(film));
+        assertThrows(FilmValidateException.class, () -> FilmValidator.validate(film));
     }
 
     @Test
     void validateFilmDuration() {
         film.setDuration(-20);
-        assertThrows(RuntimeException.class, () -> FilmValidator.validate(film));
+        assertThrows(FilmValidateException.class, () -> FilmValidator.validate(film));
     }
 }
