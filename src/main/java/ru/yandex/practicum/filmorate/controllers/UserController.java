@@ -25,8 +25,7 @@ public class UserController {
         UserValidator.validate(user);
         user.setId(id++);
         users.put(user.getId(), user);
-        log.debug("Добавлен пользователь");
-        log.debug("Количество пользователей: {}", users.size());
+        log.debug("Добавлен пользователь. Количество пользователей: {}", users.size());
         return user;
     }
 
@@ -35,11 +34,9 @@ public class UserController {
         UserValidator.validate(user);
         if (users.containsKey(user.getId())) {
             users.put(user.getId(), user);
-            log.debug("Пользователь обновлен");
-            log.debug("Количество пользователей: {}", users.size());
+            log.debug("Пользователь обновлен. Количество пользователей: {}", users.size());
             return user;
         } else {
-            log.warn("Попытка обновить информацию о пользователе которого не существует");
             throw new UserUpdateException("Попытка обновить информацию о пользователе которого не существует");
         }
     }

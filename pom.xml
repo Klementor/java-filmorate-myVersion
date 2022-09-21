@@ -15,6 +15,10 @@
     <description>A service that works with movies and user ratings, as well as returns the top 5 movies</description>
     <properties>
         <java.version>11</java.version>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>5.6.2</version>
+        <scope>test</scope>
     </properties>
     <dependencies>
         <dependency>

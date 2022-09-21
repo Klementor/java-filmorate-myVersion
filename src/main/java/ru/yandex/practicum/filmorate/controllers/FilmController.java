@@ -24,8 +24,7 @@ public class FilmController {
         FilmValidator.validate(film);
         film.setId(id++);
         films.put(film.getId(), film);
-        log.debug("Добавлен фильм");
-        log.debug("Количество фильмов: {}", films.size());
+        log.debug("Добавлен фильм. Количество фильмов: {}", films.size());
         return film;
     }
 
@@ -34,11 +33,9 @@ public class FilmController {
         FilmValidator.validate(film);
         if (films.containsKey(film.getId())) {
             films.put(film.getId(), film);
-            log.debug("Фильм обновлен");
-            log.debug("Количество фильмов: {}", films.size());
+            log.debug("Фильм обновлен. Количество фильмов: {}", films.size());
             return film;
         } else {
-            log.warn("Попытка обновить несуществующий фильм");
             throw new FilmUpdateException("Попытка обновить несуществующий фильм");
         }
     }
