@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.validator;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yandex.practicum.filmorate.exceptions.UserUpdateException;
 import ru.yandex.practicum.filmorate.exceptions.UserValidateException;
 import ru.yandex.practicum.filmorate.model.User;
 
