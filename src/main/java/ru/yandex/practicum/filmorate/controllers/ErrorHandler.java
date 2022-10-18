@@ -14,22 +14,24 @@ import java.util.Map;
 @RestControllerAdvice
 public class ErrorHandler {
 
+    String error = "error";
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> filmValidationHandler(final FilmValidateException e) {
-        return Map.of("error", e.getMessage());
+        return Map.of(error, e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> ValidationHandler(final MethodArgumentNotValidException e) {
-        return Map.of("error", e.getMessage());
+        return Map.of(error, e.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> filmNotFoundHandler(final NotFoundException e) {
-        return Map.of("error", e.getMessage());
+        return Map.of(error, e.getMessage());
     }
 
     @ExceptionHandler
@@ -37,9 +39,10 @@ public class ErrorHandler {
     public Map<String, String> throwableExceptionHandler(final Throwable e) {
         return Map.of("error", e.getMessage());
     }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> userValidationHandler(final UserValidateException e) {
-        return Map.of("error", e.getMessage());
+        return Map.of(error, e.getMessage());
     }
 }

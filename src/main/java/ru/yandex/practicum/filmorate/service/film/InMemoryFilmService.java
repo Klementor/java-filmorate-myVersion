@@ -6,8 +6,8 @@ import ru.yandex.practicum.filmorate.exceptions.AlreadyExistsException;
 import ru.yandex.practicum.filmorate.exceptions.FilmValidateException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.user.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.service.user.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import ru.yandex.practicum.filmorate.validator.FilmValidator;
 
 import java.util.Comparator;
@@ -30,7 +30,7 @@ public class InMemoryFilmService implements FilmService {
     @Override
     public Film addFilm(Film film) throws FilmValidateException {
         FilmValidator.validate(film);
-        if (inMemoryFilmStorage.getAll().get(film.getId()) == null) {
+        if (inMemoryFilmStorage.getAll() == null || inMemoryFilmStorage.getAll().get(film.getId()) == null) {
             return inMemoryFilmStorage.addFilm(film);
         } else {
             throw new AlreadyExistsException("Данный фильм уже создан");
@@ -65,7 +65,7 @@ public class InMemoryFilmService implements FilmService {
     public void removeLike(long filmId, long userId) {
         if (inMemoryFilmStorage.getAll().get(filmId) == null) {
             throw new NotFoundException("Данного фильма не существует");
-        } else if (inMemoryUserStorage.getAll().get(userId) == null) {
+        } else if (inMemoryUserStorage.getAll() == null || inMemoryUserStorage.getAll().get(userId) == null) {
             throw new NotFoundException("Пользователя не существует");
         }
         inMemoryFilmStorage.getFilm(filmId).getLikes().remove(userId);

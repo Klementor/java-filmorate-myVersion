@@ -29,8 +29,8 @@ public class FilmController {
 
     @PutMapping
     public Film update(@RequestBody Film film) {
-        log.debug("Фильм обновлен. Количество фильмов: {}", inMemoryFilmService.updateFilm(film));
-        return film;
+        log.debug("Фильм обновлен");
+        return inMemoryFilmService.updateFilm(film);
     }
 
     @GetMapping

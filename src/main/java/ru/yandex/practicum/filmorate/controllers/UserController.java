@@ -23,14 +23,14 @@ public class UserController {
 
     @PostMapping
     public User create(@RequestBody User user) {
-        log.debug("Добавлен пользователь. Количество пользователей: {}", inMemoryUserService.addUser(user));
-        return user;
+        log.debug("Добавлен пользователь");
+        return inMemoryUserService.addUser(user);
     }
 
     @PutMapping
     public User update(@RequestBody User user) {
-        log.debug("Пользователь обновлен. Количество пользователей: {}", inMemoryUserService.updateUser(user));
-        return user;
+        log.debug("Пользователь обновлен");
+        return inMemoryUserService.updateUser(user);
     }
 
     @GetMapping

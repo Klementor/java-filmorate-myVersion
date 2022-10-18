@@ -5,7 +5,7 @@ import ru.yandex.practicum.filmorate.exceptions.AlreadyExistsException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exceptions.UserValidateException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.user.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 import ru.yandex.practicum.filmorate.validator.UserValidator;
 
 import java.util.ArrayList;
@@ -66,9 +66,9 @@ public class InMemoryUserService implements UserService {
 
     @Override
     public List<User> getFriends(long id) {
-       return inMemoryUserStorage.getUser(id).getFriendsId().stream()
-               .map(this::getUser)
-               .collect(Collectors.toList());
+        return inMemoryUserStorage.getUser(id).getFriendsId().stream()
+                .map(this::getUser)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -83,8 +83,8 @@ public class InMemoryUserService implements UserService {
         Set<Long> friendsById = inMemoryUserStorage.getAll().get(id).getFriendsId();
         Set<Long> friendsByOtherId = inMemoryUserStorage.getAll().get(otherId).getFriendsId();
         List<Long> mutualFriends = new ArrayList<>();
-        for (Long friendId: friendsById) {
-            if (friendsByOtherId.contains(friendId)){
+        for (Long friendId : friendsById) {
+            if (friendsByOtherId.contains(friendId)) {
                 mutualFriends.add(friendId);
             }
         }
