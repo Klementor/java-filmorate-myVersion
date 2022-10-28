@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.validator;
 
 import ru.yandex.practicum.filmorate.exceptions.UserValidateException;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.user.User;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;

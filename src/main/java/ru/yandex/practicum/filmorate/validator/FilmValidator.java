@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.validator;
 
 import ru.yandex.practicum.filmorate.exceptions.FilmValidateException;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.film.Film;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;

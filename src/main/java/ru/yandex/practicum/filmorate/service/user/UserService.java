@@ -1,9 +1,8 @@
 package ru.yandex.practicum.filmorate.service.user;
 
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.model.user.User;
 
 import java.util.List;
-import java.util.Map;
 
 public interface UserService {
 
@@ -11,7 +10,7 @@ public interface UserService {
 
     User updateUser(User user);
 
-    Map<Long, User> getAll();
+    List<User> getAll();
 
     void addFriend(long id, long friendId);
 
