@@ -29,20 +29,8 @@ class FilmValidatorTest {
     }
 
     @Test
-    void validateNullName() {
-        film.setName(null);
-        assertThrows(FilmValidateException.class, () -> FilmValidator.validate(film));
-    }
-
-    @Test
     void validateSpaceName() {
         film.setName("  ");
-        assertThrows(FilmValidateException.class, () -> FilmValidator.validate(film));
-    }
-
-    @Test
-    void validateDescriptionNull() {
-        film.setDescription(null);
         assertThrows(FilmValidateException.class, () -> FilmValidator.validate(film));
     }
 
