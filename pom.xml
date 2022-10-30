@@ -15,7 +15,8 @@
     <description>A service that works with movies and user ratings, as well as returns the top 5 movies</description>
     <properties>
         <java.version>11</java.version>
-        <junit.version>5.9.0</junit.version>
+        <junit.version>5.6.2</junit.version>
+        <jdbc.version>2.7.5</jdbc.version>
     </properties>
     <dependencies>
         <dependency>
@@ -43,7 +44,7 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <version>5.7.0</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -56,7 +57,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jdbc</artifactId>
-            <version>2.7.4</version>
+            <version>${jdbc.version}</version>
         </dependency>
 
     </dependencies>

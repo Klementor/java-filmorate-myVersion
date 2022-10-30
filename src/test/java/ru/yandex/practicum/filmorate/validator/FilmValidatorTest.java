@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.FilmValidateException;
-import ru.yandex.practicum.filmorate.model.film.Film;
+import ru.yandex.practicum.filmorate.model.Film;
 
 import java.time.LocalDate;
 
@@ -20,7 +20,7 @@ class FilmValidatorTest {
         film.setName("Титаник");
         film.setDescription("Любовная драма");
         film.setDuration(120);
-        film.setReleaseDate(LocalDate.of(2000, 06, 5));
+        film.setReleaseDate(LocalDate.of(2000, 6, 5));
     }
 
     @Test

@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.service.rating;
 
-import ru.yandex.practicum.filmorate.model.film.Mpa;
+import ru.yandex.practicum.filmorate.model.Mpa;
 
 import java.util.List;
 

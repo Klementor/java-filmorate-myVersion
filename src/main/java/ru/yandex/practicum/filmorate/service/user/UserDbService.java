@@ -1,10 +1,13 @@
 package ru.yandex.practicum.filmorate.service.user;
 
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exceptions.*;
-import ru.yandex.practicum.filmorate.model.user.User;
+import ru.yandex.practicum.filmorate.exceptions.AlreadyExistsException;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
+import ru.yandex.practicum.filmorate.exceptions.UserValidateException;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.dao.friendship.FriendshipDao;
 import ru.yandex.practicum.filmorate.storage.dao.user.UserDao;
 import ru.yandex.practicum.filmorate.validator.UserValidator;
@@ -15,16 +18,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserDbService implements UserService {
 
     private final UserDao userDao;
-
     private final FriendshipDao friendshipDao;
-
-    public UserDbService(UserDao userDao, FriendshipDao friendshipDao) {
-        this.userDao = userDao;
-        this.friendshipDao = friendshipDao;
-    }
 
     @Override
     public User addUser(@NonNull User user) throws UserValidateException {

@@ -1,20 +1,20 @@
 package ru.yandex.practicum.filmorate.service.film;
 
 import lombok.NonNull;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.AlreadyExistsException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
-import ru.yandex.practicum.filmorate.model.film.Film;
-import ru.yandex.practicum.filmorate.model.film.Genre;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.dao.film.FilmDao;
 import ru.yandex.practicum.filmorate.storage.dao.genres.GenreDao;
 import ru.yandex.practicum.filmorate.storage.dao.like.LikeDao;
-import ru.yandex.practicum.filmorate.storage.dao.like.LikeDaoImpl;
 import ru.yandex.practicum.filmorate.storage.dao.ratings.RatingDao;
 import ru.yandex.practicum.filmorate.storage.dao.user.UserDao;
+import ru.yandex.practicum.filmorate.storage.mappers.LikeMapper;
 import ru.yandex.practicum.filmorate.validator.FilmValidator;
 
 import java.util.Comparator;
@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service("FilmDbService")
+@RequiredArgsConstructor
 public class FilmDbService implements FilmService {
 
     private final FilmDao filmDao;
@@ -30,23 +31,7 @@ public class FilmDbService implements FilmService {
     private final RatingDao ratingDao;
     private final GenreDao genreDao;
     private final LikeDao likeDao;
-
     private final JdbcTemplate jdbcTemplate;
-
-
-    @Autowired
-    public FilmDbService(FilmDao filmDao,
-                         UserDao userDao,
-                         RatingDao ratingDao,
-                         GenreDao genreDao,
-                         LikeDao likeDao, JdbcTemplate jdbcTemplate) {
-        this.filmDao = filmDao;
-        this.userDao = userDao;
-        this.ratingDao = ratingDao;
-        this.genreDao = genreDao;
-        this.likeDao = likeDao;
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public Film addFilm(@NonNull Film film) {
@@ -176,7 +161,7 @@ public class FilmDbService implements FilmService {
         try {
             jdbcTemplate.queryForObject(String.format("SELECT film_id, user_id " +
                     "FROM likes " +
-                    "WHERE film_id=%d AND user_id=%d", filmId, userId), new LikeDaoImpl.LikeMapper());
+                    "WHERE film_id=%d AND user_id=%d", filmId, userId), new LikeMapper());
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("Попытка удалить несуществующий лайк");
         }

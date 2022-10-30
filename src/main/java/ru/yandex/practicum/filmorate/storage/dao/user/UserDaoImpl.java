@@ -1,26 +1,20 @@
 package ru.yandex.practicum.filmorate.storage.dao.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.user.User;
+import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.storage.mappers.UserMapper;
 
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 
 import static java.lang.String.format;
 
 @Component("UserDbStorage")
+@RequiredArgsConstructor
 public class UserDaoImpl implements UserDao {
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public UserDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public User addUser(User user) {
@@ -48,14 +42,14 @@ public class UserDaoImpl implements UserDao {
                 user.getName(),
                 Date.valueOf(user.getBirthday()),
                 user.getId());
-                return getUser(user.getId());
+        return getUser(user.getId());
     }
 
     @Override
     public List<User> getAll() {
         return jdbcTemplate.query(""
-        + "SELECT user_id, email, login, name, birthday "
-        + "FROM users", new UserMapper());
+                + "SELECT user_id, email, login, name, birthday "
+                + "FROM users", new UserMapper());
     }
 
     @Override
@@ -64,19 +58,5 @@ public class UserDaoImpl implements UserDao {
                 + "SELECT user_id, email, login, name, birthday "
                 + "FROM users "
                 + "WHERE user_id=%d", id), new UserMapper());
-    }
-
-    private static class UserMapper implements RowMapper<User> {
-        @Override
-        public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-            User user = new User();
-
-            user.setId(rs.getLong("user_id"));
-            user.setName(rs.getString("name"));
-            user.setEmail(rs.getString("email"));
-            user.setLogin(rs.getString("login"));
-            user.setBirthday(rs.getDate("birthday").toLocalDate());
-            return user;
-        }
     }
 }

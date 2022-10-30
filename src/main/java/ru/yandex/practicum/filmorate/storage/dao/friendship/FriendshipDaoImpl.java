@@ -1,25 +1,19 @@
 package ru.yandex.practicum.filmorate.storage.dao.friendship;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.user.Friendship;
+import ru.yandex.practicum.filmorate.model.Friendship;
+import ru.yandex.practicum.filmorate.storage.mappers.FriendshipsMapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component("FriendshipDaoImpl")
+@RequiredArgsConstructor
 public class FriendshipDaoImpl implements FriendshipDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public FriendshipDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public void addFriends(long to_user_id, long from_user_id, boolean mutual) {
@@ -50,16 +44,5 @@ public class FriendshipDaoImpl implements FriendshipDao {
                 ).stream()
                 .map(Friendship::getFromUserId)
                 .collect(Collectors.toSet());
-    }
-
-    static private class FriendshipsMapper implements RowMapper<Friendship> {
-        @Override
-        public Friendship mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Friendship friendship = new Friendship();
-            friendship.setFromUserId(rs.getLong("from_user_id"));
-            friendship.setToUserId(rs.getLong("to_user_id"));
-            friendship.setMutual(rs.getBoolean("mutual"));
-            return friendship;
-        }
     }
 }

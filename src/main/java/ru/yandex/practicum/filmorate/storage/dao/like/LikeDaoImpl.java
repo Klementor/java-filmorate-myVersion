@@ -1,25 +1,19 @@
 package ru.yandex.practicum.filmorate.storage.dao.like;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.model.Like;
+import ru.yandex.practicum.filmorate.storage.mappers.LikeMapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component("LikeDaoImpl")
+@RequiredArgsConstructor
 public class LikeDaoImpl implements LikeDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public LikeDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public void addLike(long userId, long filmId) {
@@ -46,23 +40,12 @@ public class LikeDaoImpl implements LikeDao {
 
     @Override
     public List<Long> getUserWhoLikes(long filmId) {
-         return jdbcTemplate.query(String.format(""
-                                 + "SELECT user_id "
-                                 + "FROM likes "
-                                 + "WHERE film_id=%d", filmId),
-                         new LikeMapper()).stream()
-                 .map(Like::getUserId)
-                 .collect(Collectors.toList());
-    }
-
-    static public class LikeMapper implements RowMapper<Like> {
-
-        @Override
-        public Like mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Like like = new Like();
-            like.setFilmId(rs.getLong("film_id"));
-            like.setUserId(rs.getLong("user_id"));
-            return like;
-        }
+        return jdbcTemplate.query(String.format(""
+                                + "SELECT user_id "
+                                + "FROM likes "
+                                + "WHERE film_id=%d", filmId),
+                        new LikeMapper()).stream()
+                .map(Like::getUserId)
+                .collect(Collectors.toList());
     }
 }

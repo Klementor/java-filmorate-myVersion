@@ -1,30 +1,25 @@
 package ru.yandex.practicum.filmorate.storage.dao.film;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.film.Film;
-import ru.yandex.practicum.filmorate.model.film.Genre;
-import ru.yandex.practicum.filmorate.model.film.Mpa;
-import ru.yandex.practicum.filmorate.storage.dao.genres.GenreDaoImpl;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.storage.mappers.FilmMapper;
+import ru.yandex.practicum.filmorate.storage.mappers.GenreMapper;
 
 import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static java.lang.String.format;
 
 @Component("FilmDbStorage")
+@RequiredArgsConstructor
 public class FilmDaoImpl implements FilmDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public FilmDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public Film addFilm(Film film) {
@@ -103,7 +98,7 @@ public class FilmDaoImpl implements FilmDao {
                 + "FROM film_genres "
                 + "JOIN genres ON film_genres.genre_id=genres.genre_id "
                 + "WHERE film_genres.film_id=%d "
-                + "ORDER BY film_genres.genre_id", id), new GenreDaoImpl.GenreMapper()));
+                + "ORDER BY film_genres.genre_id", id), new GenreMapper()));
     }
 
     private void deleteGenres(long id) {
@@ -111,22 +106,5 @@ public class FilmDaoImpl implements FilmDao {
                 + "DELETE "
                 + "FROM film_genres "
                 + "WHERE film_id=?", id);
-    }
-
-    private static class FilmMapper implements RowMapper<Film> {
-        @Override
-        public Film mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Film film = new Film();
-            Mpa mpa = new Mpa();
-            mpa.setId(rs.getInt("rating_id"));
-
-            film.setId(rs.getLong("film_id"));
-            film.setName(rs.getString("name"));
-            film.setDescription(rs.getString("description"));
-            film.setDuration(rs.getInt("duration"));
-            film.setReleaseDate(rs.getDate("release_date").toLocalDate());
-            film.setMpa(mpa);
-            return film;
-        }
     }
 }

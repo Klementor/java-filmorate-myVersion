@@ -1,27 +1,21 @@
 package ru.yandex.practicum.filmorate.storage.dao.genres;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.film.Genre;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.storage.mappers.GenreMapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
 import static java.lang.String.format;
 
 @Component("GenreDaoImpl")
+@RequiredArgsConstructor
 public class GenreDaoImpl implements GenreDao {
 
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public GenreDaoImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
 
     @Override
     public Genre getGenre(int id) {
@@ -37,15 +31,5 @@ public class GenreDaoImpl implements GenreDao {
                 + "SELECT genre_id, name "
                 + "FROM genres "
                 + "ORDER BY genre_id", new GenreMapper()));
-    }
-
-    static public class GenreMapper implements RowMapper<Genre> {
-        @Override
-        public Genre mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Genre genre = new Genre();
-            genre.setId(rs.getInt("genre_id"));
-            genre.setName(rs.getString("name"));
-            return genre;
-        }
     }
 }
