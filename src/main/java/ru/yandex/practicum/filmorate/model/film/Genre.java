@@ -7,7 +7,7 @@ import lombok.*;
 @AllArgsConstructor
 public class Genre {
     @NonNull
-    private Integer genreId;
+    private Integer id;
     @NonNull
     private String name;
 }

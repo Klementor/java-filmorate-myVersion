@@ -15,9 +15,9 @@ public interface FilmDao {
 
     Film getFilm(long id);
 
-    void addGenres(Film film);
+    void addGenres(long id, Set<Genre> genres);
 
     void updateGenres(Film film);
 
-    Set<Genre> getGenres(Film film);
+    Set<Genre> getGenres(long id);
 }

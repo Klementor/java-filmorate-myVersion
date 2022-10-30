@@ -22,7 +22,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
     }
 
     @Override
-    public void addFriends(long from_user_id, long to_user_id, boolean mutual) {
+    public void addFriends(long to_user_id, long from_user_id, boolean mutual) {
         jdbcTemplate.update(""
                 + "INSERT INTO friendships(from_user_id, to_user_id, mutual) "
                 + "VALUES (?, ?, ?)", from_user_id, to_user_id, mutual);
@@ -44,7 +44,7 @@ public class FriendshipDaoImpl implements FriendshipDao {
     @Override
     public Set<Long> getFriends(long to_user_id) {
         return jdbcTemplate.query(String.format(""
-                        + "SELECT from_user_id "
+                        + "SELECT from_user_id, to_user_id, mutual "
                         + "FROM friendships "
                         + "WHERE to_user_id=%d", to_user_id), new FriendshipsMapper()
                 ).stream()

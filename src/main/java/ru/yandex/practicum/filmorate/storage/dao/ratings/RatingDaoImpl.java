@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.storage.dao.ratings;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.model.film.Rating;
+import ru.yandex.practicum.filmorate.model.film.Mpa;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,7 +19,7 @@ public class RatingDaoImpl implements RatingDao {
     }
 
     @Override
-    public Collection<Rating> getAll() {
+    public Collection<Mpa> getAll() {
         return jdbcTemplate.query(""
                 + "SELECT rating_id, name "
                 + "FROM ratings "
@@ -27,20 +27,20 @@ public class RatingDaoImpl implements RatingDao {
     }
 
     @Override
-    public Rating getRating(int id) {
+    public Mpa getRating(int id) {
         return jdbcTemplate.queryForObject(String.format(""
                 + "SELECT rating_id, name "
                 + "FROM ratings "
                 + "WHERE RATING_ID=%d", id), new RatingMapper());
     }
 
-    static private class RatingMapper implements RowMapper<Rating> {
+    static private class RatingMapper implements RowMapper<Mpa> {
         @Override
-        public Rating mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Rating rating = new Rating();
-            rating.setRatingId(rs.getInt("rating_id"));
-            rating.setName(rs.getString("name"));
-            return rating;
+        public Mpa mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Mpa mpa = new Mpa();
+            mpa.setId(rs.getInt("rating_id"));
+            mpa.setName(rs.getString("name"));
+            return mpa;
         }
     }
 }

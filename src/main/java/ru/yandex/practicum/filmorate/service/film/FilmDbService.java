@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service.film;
 import lombok.NonNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.AlreadyExistsException;
 import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
@@ -11,12 +12,14 @@ import ru.yandex.practicum.filmorate.model.film.Genre;
 import ru.yandex.practicum.filmorate.storage.dao.film.FilmDao;
 import ru.yandex.practicum.filmorate.storage.dao.genres.GenreDao;
 import ru.yandex.practicum.filmorate.storage.dao.like.LikeDao;
+import ru.yandex.practicum.filmorate.storage.dao.like.LikeDaoImpl;
 import ru.yandex.practicum.filmorate.storage.dao.ratings.RatingDao;
 import ru.yandex.practicum.filmorate.storage.dao.user.UserDao;
 import ru.yandex.practicum.filmorate.validator.FilmValidator;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service("FilmDbService")
@@ -28,17 +31,21 @@ public class FilmDbService implements FilmService {
     private final GenreDao genreDao;
     private final LikeDao likeDao;
 
+    private final JdbcTemplate jdbcTemplate;
+
+
     @Autowired
     public FilmDbService(FilmDao filmDao,
                          UserDao userDao,
                          RatingDao ratingDao,
                          GenreDao genreDao,
-                         LikeDao likeDao) {
+                         LikeDao likeDao, JdbcTemplate jdbcTemplate) {
         this.filmDao = filmDao;
         this.userDao = userDao;
         this.ratingDao = ratingDao;
         this.genreDao = genreDao;
         this.likeDao = likeDao;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -46,9 +53,10 @@ public class FilmDbService implements FilmService {
         FilmValidator.validate(film);
         checkFilmToAdd(film);
         Film filmResult = filmDao.addFilm(film);
-        filmDao.addGenres(film);
-        filmResult.setGenres(filmDao.getGenres(film));
-        filmResult.setRating(ratingDao.getRating(film.getRating().getRatingId()));
+        filmDao.addGenres(filmResult.getId(), film.getGenres());
+        Set<Genre> genre = filmDao.getGenres(filmResult.getId());
+        filmResult.setGenres(genre);
+        filmResult.setMpa(ratingDao.getRating(film.getMpa().getId()));
         return filmResult;
     }
 
@@ -58,8 +66,8 @@ public class FilmDbService implements FilmService {
         checkFilmToUpdate(film);
         filmDao.updateGenres(film);
         Film filmResult = filmDao.updateFilm(film);
-        filmResult.setGenres(filmDao.getGenres(film));
-        filmResult.setRating(ratingDao.getRating(film.getRating().getRatingId()));
+        filmResult.setGenres(filmDao.getGenres(film.getId()));
+        filmResult.setMpa(ratingDao.getRating(film.getMpa().getId()));
         return filmResult;
     }
 
@@ -67,8 +75,8 @@ public class FilmDbService implements FilmService {
     public List<Film> getAll() {
         List<Film> films = filmDao.getAll();
         for (Film film : films) {
-            film.setGenres(filmDao.getGenres(film));
-            film.setRating(ratingDao.getRating(film.getRating().getRatingId()));
+            film.setGenres(filmDao.getGenres(film.getId()));
+            film.setMpa(ratingDao.getRating(film.getMpa().getId()));
         }
         return films;
     }
@@ -88,7 +96,7 @@ public class FilmDbService implements FilmService {
     @Override
     public List<Film> getPopularFilms(int countFilms) {
         var films = filmDao.getAll();
-        return films.stream().sorted(Comparator.comparingInt(this::getLikeCount).reversed())
+        return films.stream().sorted(Comparator.comparingLong(this::getLikeCount).reversed())
                 .limit(countFilms).collect(Collectors.toList());
     }
 
@@ -96,16 +104,16 @@ public class FilmDbService implements FilmService {
     public Film getFilm(long id) {
         try {
             Film film = filmDao.getFilm(id);
-            film.setGenres(filmDao.getGenres(film));
-            film.setRating(ratingDao.getRating(film.getRating().getRatingId()));
+            film.setGenres(filmDao.getGenres(film.getId()));
+            film.setMpa(ratingDao.getRating(film.getMpa().getId()));
             return film;
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("Данного фильма не существует");
         }
     }
 
-    private int getLikeCount(Film film) {
-        return film.getLikes().size();
+    private long getLikeCount(Film film) {
+        return likeDao.countLikes(film.getId());
     }
 
     private void checkFilmToAdd(Film film) {
@@ -113,13 +121,13 @@ public class FilmDbService implements FilmService {
             throw new AlreadyExistsException("Данный фильм уже создан");
         }
         try {
-            ratingDao.getRating(film.getRating().getRatingId());
+            ratingDao.getRating(film.getMpa().getId());
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("Неправильно задан рейтинг");
         }
         try {
             for (Genre genre : film.getGenres()) {
-                genreDao.getGenre(genre.getGenreId());
+                genreDao.getGenre(genre.getId());
             }
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("Неправильно задан жанр");
@@ -133,13 +141,13 @@ public class FilmDbService implements FilmService {
             throw new NotFoundException("Невозможно обновить несуществующий фильм");
         }
         try {
-            ratingDao.getRating(film.getRating().getRatingId());
+            ratingDao.getRating(film.getMpa().getId());
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("Неправильно задан рейтинг");
         }
         try {
             for (Genre genre : film.getGenres()) {
-                genreDao.getGenre(genre.getGenreId());
+                genreDao.getGenre(genre.getId());
             }
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("Неправильно задан жанр");
@@ -165,8 +173,12 @@ public class FilmDbService implements FilmService {
         } catch (EmptyResultDataAccessException e) {
             throw new NotFoundException("Введены неверные данные");
         }
-        if (!likeDao.getUserWhoLikes(filmId).contains(userId)) {
-            throw new NotFoundException("Лайк от данного пользователя не поставлен");
+        try {
+            jdbcTemplate.queryForObject(String.format("SELECT film_id, user_id " +
+                    "FROM likes " +
+                    "WHERE film_id=%d AND user_id=%d", filmId, userId), new LikeDaoImpl.LikeMapper());
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("Попытка удалить несуществующий лайк");
         }
     }
 }

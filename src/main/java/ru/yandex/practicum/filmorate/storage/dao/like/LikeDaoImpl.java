@@ -46,16 +46,16 @@ public class LikeDaoImpl implements LikeDao {
 
     @Override
     public List<Long> getUserWhoLikes(long filmId) {
-        return jdbcTemplate.query(String.format(""
-                                + "SELECT user_id "
-                                + "FROM likes "
-                                + "WHERE film_id=%d", filmId),
-                        new LikeMapper()).stream()
-                .map(Like::getUserId)
-                .collect(Collectors.toList());
+         return jdbcTemplate.query(String.format(""
+                                 + "SELECT user_id "
+                                 + "FROM likes "
+                                 + "WHERE film_id=%d", filmId),
+                         new LikeMapper()).stream()
+                 .map(Like::getUserId)
+                 .collect(Collectors.toList());
     }
 
-    static private class LikeMapper implements RowMapper<Like> {
+    static public class LikeMapper implements RowMapper<Like> {
 
         @Override
         public Like mapRow(ResultSet rs, int rowNum) throws SQLException {

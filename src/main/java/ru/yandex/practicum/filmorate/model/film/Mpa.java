@@ -8,9 +8,9 @@ import lombok.NonNull;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Rating {
+public class Mpa {
     @NonNull
-    private Integer ratingId;
+    private Integer id;
     @NonNull
     private String name;
 }

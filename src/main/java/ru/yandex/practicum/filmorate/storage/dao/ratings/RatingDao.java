@@ -1,11 +1,11 @@
 package ru.yandex.practicum.filmorate.storage.dao.ratings;
 
-import ru.yandex.practicum.filmorate.model.film.Rating;
+import ru.yandex.practicum.filmorate.model.film.Mpa;
 
 import java.util.Collection;
 
 public interface RatingDao {
-    Collection<Rating> getAll();
+    Collection<Mpa> getAll();
 
-    Rating getRating(int id);
+    Mpa getRating(int id);
 }

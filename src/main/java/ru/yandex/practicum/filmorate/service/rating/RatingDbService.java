@@ -1,8 +1,10 @@
 package ru.yandex.practicum.filmorate.service.rating;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.model.film.Rating;
+import ru.yandex.practicum.filmorate.exceptions.NotFoundException;
+import ru.yandex.practicum.filmorate.model.film.Mpa;
 import ru.yandex.practicum.filmorate.storage.dao.ratings.RatingDao;
 
 import java.util.ArrayList;
@@ -19,12 +21,17 @@ public class RatingDbService implements RatingService{
     }
 
     @Override
-    public List<Rating> getRatings() {
+    public List<Mpa> getRatings() {
         return new ArrayList<>(ratingDao.getAll());
     }
 
     @Override
-    public Rating getRating(int id) {
-        return ratingDao.getRating(id);
+    public Mpa getRating(int id) {
+        try {
+            return ratingDao.getRating(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NotFoundException("Рейтинг не найден");
+        }
+
     }
 }
