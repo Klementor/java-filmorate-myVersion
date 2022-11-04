@@ -20,7 +20,7 @@ class FilmValidatorTest {
         film.setName("Титаник");
         film.setDescription("Любовная драма");
         film.setDuration(120);
-        film.setReleaseDate(LocalDate.of(2000, 06, 5));
+        film.setReleaseDate(LocalDate.of(2000, 6, 5));
     }
 
     @Test
@@ -29,20 +29,8 @@ class FilmValidatorTest {
     }
 
     @Test
-    void validateNullName() {
-        film.setName(null);
-        assertThrows(FilmValidateException.class, () -> FilmValidator.validate(film));
-    }
-
-    @Test
     void validateSpaceName() {
         film.setName("  ");
-        assertThrows(FilmValidateException.class, () -> FilmValidator.validate(film));
-    }
-
-    @Test
-    void validateDescriptionNull() {
-        film.setDescription(null);
         assertThrows(FilmValidateException.class, () -> FilmValidator.validate(film));
     }
 

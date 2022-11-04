@@ -14,7 +14,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    String error = "error";
+    private final String error = "error";
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)

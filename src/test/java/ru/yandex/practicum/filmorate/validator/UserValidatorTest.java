@@ -28,20 +28,8 @@ class UserValidatorTest {
     }
 
     @Test
-    void validateNullLogin() {
-        user.setLogin(null);
-        assertThrows(UserValidateException.class, () -> UserValidator.validate(user));
-    }
-
-    @Test
     void validateSpaceLogin() {
         user.setLogin("  ");
-        assertThrows(UserValidateException.class, () -> UserValidator.validate(user));
-    }
-
-    @Test
-    void validateNullEmail() {
-        user.setEmail(null);
         assertThrows(UserValidateException.class, () -> UserValidator.validate(user));
     }
 
@@ -49,13 +37,6 @@ class UserValidatorTest {
     void validateEmailWithoutTheSignAt() {
         user.setEmail("lala");
         assertThrows(UserValidateException.class, () -> UserValidator.validate(user));
-    }
-
-    @Test
-    void validateNUllName() throws UserValidateException {
-        user.setName(null);
-        UserValidator.validate(user);
-        assertEquals(user.getName(), user.getLogin());
     }
 
     @Test

@@ -1,15 +1,15 @@
-package ru.yandex.practicum.filmorate.storage.user;
+package ru.yandex.practicum.filmorate.storage.dao.user;
 
 import ru.yandex.practicum.filmorate.model.User;
 
-import java.util.Map;
+import java.util.List;
 
-public interface UserStorage {
+public interface UserDao {
     User addUser(User user);
 
     User updateUser(User user);
 
-    Map<Long, User> getAll();
+    List<User> getAll();
 
     User getUser(long id);
 }

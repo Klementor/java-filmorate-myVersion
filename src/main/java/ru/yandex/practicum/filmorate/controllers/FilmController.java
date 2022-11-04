@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.film.FilmService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -14,52 +13,52 @@ import java.util.List;
 @Slf4j
 public class FilmController {
 
-    private final FilmService inMemoryFilmService;
+    private final FilmService filmService;
 
     @Autowired
-    public FilmController(FilmService inMemoryFilmService) {
-        this.inMemoryFilmService = inMemoryFilmService;
+    public FilmController(FilmService filmService) {
+        this.filmService = filmService;
     }
 
     @PostMapping
     public Film create(@RequestBody Film film) {
         log.debug("Добавлен фильм");
-        return inMemoryFilmService.addFilm(film);
+        return filmService.addFilm(film);
     }
 
     @PutMapping
     public Film update(@RequestBody Film film) {
         log.debug("Фильм обновлен");
-        return inMemoryFilmService.updateFilm(film);
+        return filmService.updateFilm(film);
     }
 
     @GetMapping
     public List<Film> getAll() {
         log.debug("Вывод списка из всех фильмов");
-        return new ArrayList<>(inMemoryFilmService.getAll().values());
+        return filmService.getAll();
     }
 
     @GetMapping("/{id}")
     public Film getFilm(@PathVariable long id) {
         log.debug("Получение фильма по id");
-        return inMemoryFilmService.getFilm(id);
+        return filmService.getFilm(id);
     }
 
     @PutMapping("/{id}/like/{userId}")
     public void addLike(@PathVariable long id, @PathVariable long userId) {
         log.debug("Добавление пользователем лайка фильму");
-        inMemoryFilmService.addLike(id, userId);
+        filmService.addLike(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
     public void removeLike(@PathVariable long id, @PathVariable long userId) {
         log.debug("Удаление пользователем лайка у фильма");
-        inMemoryFilmService.removeLike(id, userId);
+        filmService.removeLike(id, userId);
     }
 
     @GetMapping("/popular")
     public List<Film> getPopularFilms(@RequestParam(defaultValue = "10") int count) {
         log.debug("Вывод самых популярных фильмов");
-        return inMemoryFilmService.getPopularFilms(count);
+        return filmService.getPopularFilms(count);
     }
 }
